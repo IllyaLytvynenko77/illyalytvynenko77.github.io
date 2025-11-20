@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №4 | Литвиненко Ілля</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        header h1 { color: #2c3e50; margin: 0; font-size: 2em; }
+        header h2 { color: #7f8c8d; margin: 10px 0 0; font-weight: 400; font-size: 1.2em; }
+
+        .task-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        h3 {
+            color: #3498db;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        input[type="radio"], input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        select, input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 1em;
+        }
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #27ae60; }
+
+        #results {
+            display: none;
+            margin-top: 30px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #eee;
+            padding: 12px;
+            text-align: left;
+        }
+        th { background-color: #f8f9fa; color: #2c3e50; }
+        .total-score {
+            font-size: 1.5em;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            color: #2980b9;
+        }
+    </style>
+    <script>
+        function checkTest() {
+            let totalScore = 0;
+            const tbody = document.getElementById('resultsBody');
+            tbody.innerHTML = '';
+
+            const answers = [
+                { id: 'q1', type: 'radio', correct: 'css', text: '1. Мова стилізації' },
+                { id: 'q2', type: 'radio', correct: 'h1', text: '2. Тег заголовка' },
+                { id: 'q3', type: 'checkbox', correct: ['cpp', 'go'], text: '3. Компільовані мови' },
+                { id: 'q4', type: 'checkbox', correct: ['array', 'queue'], text: '4. Лінійні структури' },
+                { id: 'q5', type: 'select', correct: 'map', text: '5. Метод масиву' },
+                { id: 'q6', type: 'multiselect', correct: ['strict', 'not'], text: '6. Оператори порівняння' },
+                { id: 'q7', type: 'text', correct: ['react', 'vue', 'angular'], text: '7. JS Фреймворк' }
+            ];
+
+            answers.forEach((q, index) => {
+                let score = 0;
+                let userResponse = '';
+
+                if (q.type === 'radio') {
+                    const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+                    if (selected) {
+                        userResponse = selected.parentNode.textContent.trim();
+                        if (selected.value === q.correct) score = 1;
+                    } else {
+                        userResponse = '-';
+                    }
+                } 
+                else if (q.type === 'checkbox') {
+                    const checked = document.querySelectorAll(`input[name="${q.id}"]:checked`);
+                    let selectedVals = [];
+                    let selectedTexts = [];
+                    
+                    checked.forEach(cb => {
+                        selectedVals.push(cb.value);
+                        selectedTexts.push(cb.parentNode.textContent.trim());
+                    });
+                    
+                    userResponse = selectedTexts.join(', ') || '-';
+
+                    if (selectedVals.length > 2) {
+                        score = 0;
+                    } else {
+                        let correctCount = 0;
+                        selectedVals.forEach(val => {
+                            if (q.correct.includes(val)) correctCount++;
+                        });
+                        score = correctCount; 
+                    }
+                }
+                else if (q.type === 'select') {
+                    const select = document.querySelector(`select[name="${q.id}"]`);
+                    userResponse = select.options[select.selectedIndex].text;
+                    if (select.value === q.correct) score = 1;
+                }
+                else if (q.type === 'multiselect') {
+                    const select = document.querySelector(`select[name="${q.id}"]`);
+                    let selectedVals = [];
+                    let selectedTexts = [];
+                    
+                    for (let opt of select.options) {
+                        if (opt.selected) {
+                            selectedVals.push(opt.value);
+                            selectedTexts.push(opt.text);
+                        }
+                    }
+                    userResponse = selectedTexts.join(', ') || '-';
+
+                    if (selectedVals.length > 2) {
+                        score = 0;
+                    } else {
+                        let correctCount = 0;
+                        selectedVals.forEach(val => {
+                            if (q.correct.includes(val)) correctCount++;
+                        });
+                        score = correctCount;
+                    }
+                }
+                else if (q.type === 'text') {
+                    const input = document.querySelector(`input[name="${q.id}"]`);
+                    userResponse = input.value;
+                    if (q.correct.includes(input.value.toLowerCase().trim())) score = 1;
+                }
+
+                totalScore += score;
+
+                const row = `<tr>
+                    <td>${q.text}</td>
+                    <td>${userResponse}</td>
+                    <td>${score}</td>
+                </tr>`;
+                tbody.innerHTML += row;
+            });
+
+            document.getElementById('totalScore').innerText = totalScore;
+            document.getElementById('results').style.display = 'block';
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Лабораторна робота №4</h1>
+        <h2>Студент: Литвиненко Ілля | Варіант №7</h2>
+        <p>Тема: Опрацювання форм та тестування</p>
+    </header>
+
+    <div class="task-card">
+        <div class="question-text">1. Яка мова програмування використовується для стилізації веб-сторінок?</div>
+        <label><input type="radio" name="q1" value="js"> JavaScript</label>
+        <label><input type="radio" name="q1" value="py"> Python</label>
+        <label><input type="radio" name="q1" value="css"> CSS</label>
+        <label><input type="radio" name="q1" value="java"> Java</label>
+    </div>
+
+    <div class="task-card">
+        <div class="question-text">2. Який тег HTML використовується для заголовка найвищого рівня?</div>
+        <label><input type="radio" name="q2" value="header"> header</label>
+        <label><input type="radio" name="q2" value="heading"> heading</label>
+        <label><input type="radio" name="q2" value="h1"> h1</label>
+        <label><input type="radio" name="q2" value="title"> title</label>
+    </div>
+
+    <div class="task-card">
+        <div class="question-text">3. Які з перелічених мов є компільованими? (Оберіть 2)</div>
+        <label><input type="checkbox" name="q3" value="cpp"> C++</label>
+        <label><input type="checkbox" name="q3" value="js"> JavaScript</label>
+        <label><input type="checkbox" name="q3" value="go"> Go</label>
+        <label><input type="checkbox" name="q3" value="py"> Python</label>
+    </div>
+
+    <div class="task-card">
+        <div class="question-text">4. Які структури даних є лінійними? (Оберіть 2)</div>
+        <label><input type="checkbox" name="q4" value="array"> Масив</label>
+        <label><input type="checkbox" name="q4" value="tree"> Дерево</label>
+        <label><input type="checkbox" name="q4" value="queue"> Черга</label>
+        <label><input type="checkbox" name="q4" value="graph"> Граф</label>
+    </div>
+
+    <div class="task-card">
+        <div class="question-text">5. Який метод масиву JavaScript повертає новий масив?</div>
+        <select name="q5">
+            <option value="push">push()</option>
+            <option value="map">map()</option>
+            <option value="sort">sort()</option>
+            <option value="reverse">reverse()</option>
+        </select>
+    </div>
+
+    <div class="task-card">
+        <div class="question-text">6. Оператори порівняння в JS (Оберіть 2, затисніть Ctrl)</div>
+        <select name="q6" multiple size="4">
+            <option value="strict">===</option>
+            <option value="assign">=</option>
+            <option value="not">!=</option>
+            <option value="plus">+</option>
+        </select>
+    </div>
+
+    <div class="task-card">
+        <div class="question-text">7. Напишіть назву будь-якого JS фреймворку (React, Vue, Angular):</div>
+        <input type="text" name="q7" placeholder="Введіть відповідь...">
+    </div>
+
+    <button onclick="checkTest()">Завершити тестування</button>
+
+    <div id="results">
+        <h2>Результати тестування</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Запитання</th>
+                    <th>Ваша відповідь</th>
+                    <th>Бал</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+        </table>
+        <div class="total-score">Загальний результат: <span id="totalScore">0</span> / 8</div>
+    </div>
+
+</div>
+
+</body>
+</html>
