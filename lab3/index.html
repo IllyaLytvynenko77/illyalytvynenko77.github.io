@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №3 | Литвиненко Ілля</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        header h1 { color: #2c3e50; margin: 0; font-size: 2em; }
+        header h2 { color: #7f8c8d; margin: 10px 0 0; font-weight: 400; font-size: 1.2em; }
+
+        .task-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        h3 {
+            color: #3498db;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        label { font-weight: 600; width: 150px; }
+        input[type="number"], input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            flex-grow: 1;
+        }
+
+        .keyboard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 15px;
+        }
+        .kb-row {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        .key-btn {
+            padding: 10px;
+            min-width: 40px;
+            background-color: #ecf0f1;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .key-btn:active { background-color: #bdc3c7; }
+        .key-wide { padding: 10px 20px; background-color: #3498db; color: white; border: none; }
+        .key-wide:hover { background-color: #2980b9; }
+
+        .img-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+        #gallery-img {
+            max-width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 3px solid #eee;
+        }
+        .btn-nav {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 0 10px;
+        }
+
+        .tree ul { list-style-type: none; padding-left: 20px; }
+        .tree li { margin: 5px 0; cursor: pointer; }
+        .caret { user-select: none; font-weight: bold; color: #2c3e50; }
+        .caret::before { content: "▶"; color: #3498db; display: inline-block; margin-right: 6px; font-size: 0.8em; }
+        .caret-down::before { transform: rotate(90deg); }
+        .nested { display: none; margin-left: 15px; }
+        .active { display: block; }
+
+        .result-text { font-weight: bold; color: #27ae60; font-size: 1.1em; }
+    </style>
+    <script>
+        function task1() {
+            let a = parseFloat(document.getElementById('t1_a').value);
+            let b = parseFloat(document.getElementById('t1_b').value);
+            let h = parseFloat(document.getElementById('t1_h').value);
+            let resBox = document.getElementById('t1_res');
+
+            if (!isNaN(a) && !isNaN(b) && !isNaN(h)) {
+                let area = ((a + b) / 2) * h;
+                resBox.innerText = "Площа трапеції: " + area.toFixed(2);
+            } else {
+                resBox.innerText = "Введіть коректні дані";
+            }
+        }
+
+        const ua_keys = [
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['й','ц','у','к','е','н','г','ш','щ','з','х'],
+            ['ф','і','в','а','п','р','о','л','д','ж','є'],
+            ['я','ч','с','м','и','т','ь','б','ю','ї']
+        ];
+        const en_keys = [
+            ['1','2','3','4','5','6','7','8','9','0'],
+            ['q','w','e','r','t','y','u','i','o','p'],
+            ['a','s','d','f','g','h','j','k','l'],
+            ['z','x','c','v','b','n','m']
+        ];
+        let isUa = true;
+
+        function renderKeyboard() {
+            let container = document.getElementById('keyboard');
+            container.innerHTML = '';
+            let layout = isUa ? ua_keys : en_keys;
+
+            layout.forEach(row => {
+                let rowDiv = document.createElement('div');
+                rowDiv.className = 'kb-row';
+                row.forEach(char => {
+                    let btn = document.createElement('button');
+                    btn.className = 'key-btn';
+                    btn.innerText = char;
+                    btn.onclick = () => document.getElementById('kb_input').value += char;
+                    rowDiv.appendChild(btn);
+                });
+                container.appendChild(rowDiv);
+            });
+        }
+
+        function switchLang() {
+            isUa = !isUa;
+            renderKeyboard();
+        }
+
+        function clearKb() {
+            document.getElementById('kb_input').value = '';
+        }
+
+        const imgPaths = ['image1.jpg', 'image2.jpg', 'image3.jpg', 'image4.jpg']; 
+        let imgIndex = 0;
+
+        function updateImage() {
+            document.getElementById('gallery-img').src = imgPaths[imgIndex];
+            document.getElementById('gallery-img').alt = "Зображення " + (imgIndex + 1);
+        }
+
+        function nextImg() {
+            imgIndex = (imgIndex + 1) % imgPaths.length;
+            updateImage();
+        }
+
+        function prevImg() {
+            imgIndex = (imgIndex - 1 + imgPaths.length) % imgPaths.length;
+            updateImage();
+        }
+
+        let qTotal = 5;
+        let qCurrent = 0;
+        let qCorrect = 0;
+        let correctAnswer = 0;
+
+        function startQuiz() {
+            qCurrent = 0;
+            qCorrect = 0;
+            document.getElementById('quiz-block').style.display = 'block';
+            document.getElementById('start-btn').style.display = 'none';
+            nextQuestion();
+        }
+
+        function nextQuestion() {
+            if (qCurrent >= qTotal) {
+                let percent = (qCorrect / qTotal) * 100;
+                document.getElementById('quiz-task').innerHTML = `<b>Тест завершено!</b><br>Результат: ${percent}% (${qCorrect} з ${qTotal})`;
+                document.getElementById('quiz-controls').style.display = 'none';
+                return;
+            }
+
+            qCurrent++;
+            let n1 = Math.floor(Math.random() * 10);
+            let n2 = Math.floor(Math.random() * 10);
+            let ops = ['+', '-', '*']; 
+            let op = ops[Math.floor(Math.random() * ops.length)];
+
+            correctAnswer = eval(`${n1} ${op} ${n2}`);
+            document.getElementById('quiz-task').innerText = `Завдання ${qCurrent}/${qTotal}: Скільки буде ${n1} ${op} ${n2}?`;
+            document.getElementById('quiz-ans').value = '';
+            document.getElementById('quiz-res').innerText = '';
+        }
+
+        function checkQuiz() {
+            let userAns = parseFloat(document.getElementById('quiz-ans').value);
+            let resBlock = document.getElementById('quiz-res');
+            
+            if (isNaN(userAns)) return;
+
+            if (userAns === correctAnswer) {
+                resBlock.innerHTML = '<span style="color:green">Правильно!</span>';
+                qCorrect++;
+            } else {
+                resBlock.innerHTML = `<span style="color:red">Помилка! Правильна відповідь: ${correctAnswer}</span>`;
+            }
+            
+            setTimeout(nextQuestion, 1500);
+        }
+
+        const treeData = {
+            "Фрукти": ["Яблуко", "Ананас", "Абрикос", "Груша", "Лимон"],
+            "Овочі": ["Картопля", "Буряк", "Морква", "Цибуля"]
+        };
+
+        function buildTree() {
+            let root = document.getElementById('tree-root');
+            for (let category in treeData) {
+                let li = document.createElement('li');
+                let span = document.createElement('span');
+                span.className = 'caret';
+                span.innerText = category;
+                
+                let ul = document.createElement('ul');
+                ul.className = 'nested';
+                
+                treeData[category].forEach(item => {
+                    let itemLi = document.createElement('li');
+                    itemLi.innerText = item;
+                    ul.appendChild(itemLi);
+                });
+
+                span.onclick = function() {
+                    this.parentElement.querySelector('.nested').classList.toggle('active');
+                    this.classList.toggle('caret-down');
+                };
+
+                li.appendChild(span);
+                li.appendChild(ul);
+                root.appendChild(li);
+            }
+        }
+
+        window.onload = function() {
+            renderKeyboard();
+            updateImage();
+            buildTree();
+        };
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Лабораторна робота №3</h1>
+        <h2>Студент: Литвиненко Ілля | Варіант №7</h2>
+        <p>DOM, JSON, Події</p>
+    </header>
+
+    <div class="task-card">
+        <h3>Завдання 1: Площа Трапеції</h3>
+        <div class="input-group">
+            <label>Основа a:</label>
+            <input type="number" id="t1_a" oninput="task1()">
+        </div>
+        <div class="input-group">
+            <label>Основа b:</label>
+            <input type="number" id="t1_b" oninput="task1()">
+        </div>
+        <div class="input-group">
+            <label>Висота h:</label>
+            <input type="number" id="t1_h" oninput="task1()">
+        </div>
+        <div id="t1_res" class="result-text">Введіть параметри...</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 2 та 3: Екранна клавіатура</h3>
+        <textarea id="kb_input" rows="3" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;"></textarea>
+        <div style="margin-top: 10px; display: flex; gap: 10px;">
+            <button class="key-wide" onclick="switchLang()">Alt+Shift (UA/EN)</button>
+            <button class="key-wide" style="background-color: #e74c3c;" onclick="clearKb()">Очистити</button>
+        </div>
+        <div id="keyboard" class="keyboard-container"></div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 4: Галерея зображень</h3>
+        <div class="img-container">
+            <img id="gallery-img" src="" alt="Gallery Image">
+        </div>
+        <div style="text-align: center;">
+            <button class="btn-nav" onclick="prevImg()">&#8592; Назад</button>
+            <button class="btn-nav" onclick="nextImg()">Вперед &#8594;</button>
+        </div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 5: Арифметичний тест</h3>
+        <button id="start-btn" class="key-wide" onclick="startQuiz()">Почати тестування</button>
+        
+        <div id="quiz-block" style="display: none;">
+            <div id="quiz-task" style="font-size: 1.2em; margin-bottom: 15px;"></div>
+            <div id="quiz-controls" class="input-group">
+                <input type="number" id="quiz-ans" placeholder="Ваша відповідь">
+                <button class="key-wide" style="background-color: #27ae60;" onclick="checkQuiz()">Перевірити</button>
+            </div>
+            <div id="quiz-res" class="result-text"></div>
+        </div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 6: Деревоподібне меню (JSON)</h3>
+        <ul id="tree-root" class="tree"></ul>
+    </div>
+
+</div>
+
+</body>
+</html>
