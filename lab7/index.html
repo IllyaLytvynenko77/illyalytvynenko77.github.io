@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота 7 | Литвиненко Ілля</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        header h1 { color: #2c3e50; margin: 0; font-size: 2em; }
+        header h2 { color: #7f8c8d; margin: 10px 0 0; font-weight: 400; font-size: 1.2em; }
+        
+        .task-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        h3 {
+            color: #3498db;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            flex-grow: 1;
+        }
+        button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover { background-color: #27ae60; }
+        
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 6px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Лабораторна робота №7</h1>
+    </header>
+
+    <div class="task-card">
+        <h3>Завдання 1: Довжина рядка</h3>
+        <div class="input-group">
+            <input type="text" id="t1_in" placeholder="Введіть текст">
+            <button onclick="task1()">Виконати</button>
+        </div>
+        <div id="t1_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 2: Регістр</h3>
+        <div class="input-group">
+            <input type="text" id="t2_in" placeholder="Введіть текст">
+            <button onclick="task2()">Конвертувати</button>
+        </div>
+        <div id="t2_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 3: Пошук символу</h3>
+        <div class="input-group">
+            <input type="text" id="t3_str" placeholder="Рядок">
+            <input type="text" id="t3_char" placeholder="Символ" style="max-width: 80px;">
+            <button onclick="task3()">Знайти індекс</button>
+        </div>
+        <div id="t3_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 4: Кількість входжень</h3>
+        <div class="input-group">
+            <input type="text" id="t4_str" placeholder="Рядок">
+            <input type="text" id="t4_char" placeholder="Символ" style="max-width: 80px;">
+            <button onclick="task4()">Порахувати</button>
+        </div>
+        <div id="t4_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 5: Обмін символів</h3>
+        <div class="input-group">
+            <input type="text" id="t5_in" placeholder="Введіть рядок">
+            <button onclick="task5()">Змінити місцями</button>
+        </div>
+        <div id="t5_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 6: Спам-фільтр</h3>
+        <div class="input-group">
+            <input type="text" id="t6_in" placeholder="Введіть повідомлення">
+            <button onclick="task6()">Перевірити</button>
+        </div>
+        <div id="t6_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 7: Скорочення рядка</h3>
+        <div class="input-group">
+            <input type="text" id="t7_str" placeholder="Рядок">
+            <input type="number" id="t7_len" placeholder="Макс. довжина" style="max-width: 120px;">
+            <button onclick="task7()">Скоротити</button>
+        </div>
+        <div id="t7_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 8: Видалення цифр</h3>
+        <div class="input-group">
+            <input type="text" id="t8_in" placeholder="Введіть рядок з цифрами">
+            <button onclick="task8()">Видалити цифри</button>
+        </div>
+        <div id="t8_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 9: Заміна підрядка</h3>
+        <div class="input-group">
+            <input type="text" id="t9_main" placeholder="Головний рядок">
+            <input type="text" id="t9_old" placeholder="Що замінити">
+            <input type="text" id="t9_new" placeholder="На що замінити">
+            <button onclick="task9()">Замінити</button>
+        </div>
+        <div id="t9_res" class="result">Результат:</div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 10: Анаграма підрядка</h3>
+        <div class="input-group">
+            <input type="text" id="t10_main" placeholder="Рядок (де шукати)">
+            <input type="text" id="t10_sub" placeholder="Підрядок (що шукати)">
+            <button onclick="task10()">Перевірити</button>
+        </div>
+        <div id="t10_res" class="result">Результат:</div>
+    </div>
+
+</div>
+
+<script>
+    function task1() {
+        const s = document.getElementById('t1_in').value;
+        document.getElementById('t1_res').innerText = "Довжина: " + s.length;
+    }
+
+    function task2() {
+        const s = document.getElementById('t2_in').value;
+        document.getElementById('t2_res').innerHTML = 
+            `UPPER: ${s.toUpperCase()}<br>lower: ${s.toLowerCase()}`;
+    }
+
+    function task3() {
+        const s = document.getElementById('t3_str').value;
+        const c = document.getElementById('t3_char').value;
+        const idx = s.indexOf(c);
+        document.getElementById('t3_res').innerText = idx !== -1 ? "Індекс: " + idx : "Не знайдено";
+    }
+
+    function task4() {
+        const s = document.getElementById('t4_str').value;
+        const c = document.getElementById('t4_char').value;
+        if (!c) return;
+        let count = 0;
+        for (let char of s) {
+            if (char === c) count++;
+        }
+        document.getElementById('t4_res').innerText = "Кількість: " + count;
+    }
+
+    function task5() {
+        const s = document.getElementById('t5_in').value;
+        let res = "";
+        for (let i = 0; i < s.length; i += 2) {
+            res += (s[i+1] || "") + s[i];
+        }
+        document.getElementById('t5_res').innerText = "Результат: " + res;
+    }
+
+    function task6() {
+        const s = document.getElementById('t6_in').value.toLowerCase();
+        const spam = ["100% безкоштовно", "збільшення продажів", "тільки сьогодні", "не видаляйте"];
+        const isSpam = spam.some(w => s.includes(w));
+        document.getElementById('t6_res').innerText = isSpam ? "Виявлено СПАМ!" : "Спаму немає";
+    }
+
+    function task7() {
+        const s = document.getElementById('t7_str').value;
+        const len = parseInt(document.getElementById('t7_len').value);
+        let res = s;
+        if (s.length > len) {
+            res = s.slice(0, len - 3) + "...";
+        }
+        document.getElementById('t7_res').innerText = "Результат: " + res;
+    }
+
+    function task8() {
+        const s = document.getElementById('t8_in').value;
+        const res = s.replace(/\d/g, "");
+        document.getElementById('t8_res').innerText = "Результат: " + res;
+    }
+
+    function task9() {
+        const s = document.getElementById('t9_main').value;
+        const oldSub = document.getElementById('t9_old').value;
+        const newSub = document.getElementById('t9_new').value;
+        
+        if (!oldSub) return;
+        
+        const res = s.split(oldSub).join(newSub);
+        document.getElementById('t9_res').innerText = "Результат: " + res;
+    }
+
+    function task10() {
+        const main = document.getElementById('t10_main').value;
+        const sub = document.getElementById('t10_sub').value;
+        
+        if (!sub || sub.length > main.length) {
+            document.getElementById('t10_res').innerText = "false";
+            return;
+        }
+
+        const sortedSub = sub.split('').sort().join('');
+        let found = false;
+
+        for (let i = 0; i <= main.length - sub.length; i++) {
+            const chunk = main.substr(i, sub.length);
+            if (chunk.split('').sort().join('') === sortedSub) {
+                found = true;
+                break;
+            }
+        }
+
+        document.getElementById('t10_res').innerText = found ? "true" : "false";
+    }
+</script>
+
+</body>
+</html>
