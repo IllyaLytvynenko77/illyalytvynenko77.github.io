@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завдання 2</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h2 { text-align: center; color: #2c3e50; margin-top: 0; }
+        
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        input.valid { border-color: #2ecc71; }
+        input.invalid { border-color: #e74c3c; }
+
+        .message {
+            font-size: 0.85em;
+            margin-top: 5px;
+            display: none;
+        }
+        .message.error { color: #e74c3c; display: block; }
+        .message.success { color: #2ecc71; display: block; }
+
+        .icon {
+            position: absolute;
+            right: 10px;
+            top: 38px;
+            font-weight: bold;
+        }
+        .icon.valid { color: #2ecc71; }
+        .icon.invalid { color: #e74c3c; }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover { background-color: #27ae60; }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #7f8c8d;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Реєстрація</h2>
+    <form id="regForm">
+        <div class="form-group">
+            <label>E-mail (pnu.edu.ua)</label>
+            <input type="text" id="email" placeholder="user@pnu.edu.ua">
+            <span id="icon_email" class="icon"></span>
+            <div id="msg_email" class="message"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Ім'я та Прізвище</label>
+            <input type="text" id="fullname" placeholder="Ілля ЛИТВИНЕНКО">
+            <span id="icon_fullname" class="icon"></span>
+            <div id="msg_fullname" class="message"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Логін</label>
+            <input type="text" id="login" placeholder="Тільки латина">
+            <span id="icon_login" class="icon"></span>
+            <div id="msg_login" class="message"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Пароль</label>
+            <input type="password" id="password" placeholder="Мін. 8 символів">
+            <span id="icon_password" class="icon"></span>
+            <div id="msg_password" class="message"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Поштовий індекс</label>
+            <input type="text" id="zip" placeholder="12345">
+            <span id="icon_zip" class="icon"></span>
+            <div id="msg_zip" class="message"></div>
+        </div>
+
+        <button type="button" onclick="validate()">Перевірити</button>
+    </form>
+    <a href="index.html" class="back-link">На головну</a>
+</div>
+
+<script>
+    function validate() {
+        checkField('email', /@pnu\.edu\.ua$/, "Має закінчуватися на @pnu.edu.ua");
+        checkField('fullname', /^[A-ZА-ЯІЇЄҐ][a-zа-яіїєґ']+\s[A-ZА-ЯІЇЄҐ]+$/, "Формат: Ім'я ПРІЗВИЩЕ (друге слово CAPS)");
+        checkField('login', /^[a-zA-Z]+$/, "Тільки латинські літери");
+        checkField('password', /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[_\-!@#$%^&*]).{8,}$/, "Мін 8 симв: буква, цифра, спецсимвол");
+        checkField('zip', /^\d{5}$/, "Рівно 5 цифр");
+    }
+
+    function checkField(id, regex, errorMsg) {
+        let input = document.getElementById(id);
+        let icon = document.getElementById('icon_' + id);
+        let msg = document.getElementById('msg_' + id);
+
+        if (regex.test(input.value)) {
+            input.className = 'valid';
+            icon.className = 'icon valid';
+            icon.innerHTML = '✔';
+            msg.className = 'message success';
+            msg.innerHTML = 'Чудово!';
+        } else {
+            input.className = 'invalid';
+            icon.className = 'icon invalid';
+            icon.innerHTML = '✖';
+            msg.className = 'message error';
+            msg.innerHTML = errorMsg;
+        }
+    }
+</script>
+
+</body>
+</html>
