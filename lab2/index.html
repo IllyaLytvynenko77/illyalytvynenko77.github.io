@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторна робота №2 | Литвиненко Ілля</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        header h1 { color: #2c3e50; margin: 0; font-size: 2em; }
+        
+        .task-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        h3 {
+            color: #3498db;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            outline: none;
+            text-align: center;
+        }
+        input[type="button"], button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        input[type="button"]:hover, button:hover { background-color: #27ae60; }
+        
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 300px;
+        }
+        .calc-btn {
+            padding: 15px;
+            font-size: 1.2em;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            border-radius: 6px;
+        }
+        .calc-btn:hover { background-color: #bdc3c7; }
+        .calc-op { background-color: #f39c12; color: white; }
+        .calc-op:hover { background-color: #d35400; }
+        .calc-eq { background-color: #27ae60; color: white; grid-column: span 2; }
+        .calc-c { background-color: #c0392b; color: white; }
+
+        table.matrix-table { border-collapse: collapse; margin-top: 15px; }
+        table.matrix-table td { padding: 5px; border: 1px solid #eee; }
+        .matrix-input { width: 60px; }
+
+        .info-text { font-size: 0.9em; color: #888; margin-bottom: 15px; font-style: italic; }
+        .clock-display {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2980b9;
+            background: #ebf5fb;
+            padding: 10px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+    </style>
+
+    <script>
+        function startClock() {
+            setInterval(() => {
+                const now = new Date();
+                
+                let hours = String(now.getHours()).padStart(2, '0');
+                let minutes = String(now.getMinutes()).padStart(2, '0');
+                let seconds = String(now.getSeconds()).padStart(2, '0');
+                let year = now.getFullYear();
+                let month = String(now.getMonth() + 1).padStart(2, '0');
+                let day = String(now.getDate()).padStart(2, '0');
+
+                let timeStr = `${hours}/${minutes}/${seconds}+${year}*${month}*${day}`;
+                
+                document.getElementById('clock_res').innerHTML = timeStr;
+            }, 1000);
+        }
+
+        function calcAdd(val) {
+            document.getElementById('calc_display').value += val;
+        }
+        function calcClear() {
+            document.getElementById('calc_display').value = "";
+        }
+        function calcResult() {
+            try {
+                let res = eval(document.getElementById('calc_display').value);
+                document.getElementById('calc_display').value = res;
+            } catch (e) {
+                document.getElementById('calc_display').value = "Error";
+            }
+        }
+
+        let g_rows = 0;
+        let g_cols = 0;
+
+        function buildMatrix() {
+            g_rows = parseInt(document.getElementById('m_rows').value);
+            g_cols = parseInt(document.getElementById('m_cols').value);
+            let container = document.getElementById('matrix_place');
+            
+            if (isNaN(g_rows) || isNaN(g_cols) || g_rows < 1 || g_cols < 1) {
+                alert("Введіть коректні розміри!");
+                return;
+            }
+
+            let html = '<table class="matrix-table">';
+            for (let i = 1; i <= g_rows; i++) {
+                html += '<tr>';
+                for (let j = 1; j <= g_cols; j++) {
+                    let val = (1 / (2 + j)).toFixed(3);
+                    html += `<td><input type="text" class="matrix-input" id="m_${i}_${j}" value="${val}"></td>`;
+                }
+                html += '</tr>';
+            }
+            html += '</table>';
+            container.innerHTML = html;
+        }
+
+        function calculateMatrixTask() {
+            if (g_rows < 2) {
+                document.getElementById('matrix_res').value = "Помилка: Немає другого рядка!";
+                return;
+            }
+
+            let sum = 0;
+            for (let j = 1; j <= g_cols; j++) {
+                let val = parseFloat(document.getElementById(`m_2_${j}`).value);
+                if (!isNaN(val)) {
+                    sum += val;
+                }
+            }
+            document.getElementById('matrix_res').value = "Сума 2-го рядка = " + sum.toFixed(3);
+        }
+
+        function consoleTests() {
+            console.clear();
+            
+            let a = 10, b = 3;
+            console.log(`Остача від ділення ${a} на ${b}:`, a % b);
+
+            console.log(`Чи ділиться ${a} на ${b} без остачі?`, (a % b === 0));
+
+            let arr = ["Варіант 7", "Литвиненко", 2025];
+            console.log("Масив: %s, Число: %d", arr[1], arr[2]);
+
+            console.info("console.info: Інформаційне повідомлення");
+            console.warn("console.warn: Це попередження!");
+            console.error("console.error: Це імітація помилки");
+            
+            console.group("console.dir demo");
+            let obj = {student: "Illia", variant: 7, lab: 2};
+            console.dir(obj);
+            console.groupEnd();
+
+            console.time("Таймер виконання циклу");
+            let sum = 0;
+            for(let i=0; i<10000; i++) sum += i;
+            console.timeEnd("Таймер виконання циклу");
+
+            console.assert(g_rows > 0, "Матрицю ще не побудовано (console.assert)!");
+            
+            alert("Результати виведені в консоль браузера (F12)!");
+        }
+
+        window.onload = startClock;
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Лабораторна робота №2</h1>
+    </header>
+
+    <div class="task-card">
+        <h3>Завдання 1: Годинник</h3>
+        <div class="info-text">Формат: hour/min/sec+year*moun*day</div>
+        <div style="text-align: center;">
+            <div id="clock_res" class="clock-display">Завантаження...</div>
+        </div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 2: Калькулятор</h3>
+        <div class="info-text">Простий калькулятор</div>
+        <input type="text" id="calc_display" readonly style="width: 100%; margin-bottom: 15px; font-size: 1.2em; padding: 10px;">
+        
+        <div class="calc-grid">
+            <button class="calc-btn" onclick="calcAdd('7')">7</button>
+            <button class="calc-btn" onclick="calcAdd('8')">8</button>
+            <button class="calc-btn" onclick="calcAdd('9')">9</button>
+            <button class="calc-btn calc-op" onclick="calcAdd('/')">/</button>
+
+            <button class="calc-btn" onclick="calcAdd('4')">4</button>
+            <button class="calc-btn" onclick="calcAdd('5')">5</button>
+            <button class="calc-btn" onclick="calcAdd('6')">6</button>
+            <button class="calc-btn calc-op" onclick="calcAdd('*')">*</button>
+
+            <button class="calc-btn" onclick="calcAdd('1')">1</button>
+            <button class="calc-btn" onclick="calcAdd('2')">2</button>
+            <button class="calc-btn" onclick="calcAdd('3')">3</button>
+            <button class="calc-btn calc-op" onclick="calcAdd('-')">-</button>
+
+            <button class="calc-btn" onclick="calcAdd('0')">0</button>
+            <button class="calc-btn" onclick="calcAdd('.')">.</button>
+            <button class="calc-btn calc-c" onclick="calcClear()">C</button>
+            <button class="calc-btn calc-op" onclick="calcAdd('+')">+</button>
+
+            <button class="calc-btn calc-eq" onclick="calcResult()">=</button>
+        </div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 3: Генерація таблиці</h3>
+        <div class="row">
+            Рядків: <input type="text" id="m_rows" value="3" style="width: 50px;">
+            Стовпців: <input type="text" id="m_cols" value="4" style="width: 50px;">
+            <input type="button" value="Побудувати" onclick="buildMatrix()">
+        </div>
+
+        <div id="matrix_place" style="overflow-x: auto; margin-bottom: 15px;"></div>
+
+        <div class="row">
+            <input type="button" value="Розрахувати" onclick="calculateMatrixTask()" style="background-color: #e67e22;">
+            <input type="text" id="matrix_res" readonly style="width: 250px; font-weight: bold;">
+        </div>
+    </div>
+
+    <div class="task-card">
+        <h3>Завдання 4 та 5: Робота з Console</h3>
+        <div class="info-text">Натисніть кнопку та відкрийте консоль розробника (F12), щоб побачити результати виконання</div>
+        <input type="button" value="Запустити тести консолі" onclick="consoleTests()">
+    </div>
+
+</div>
+
+</body>
+</html>
