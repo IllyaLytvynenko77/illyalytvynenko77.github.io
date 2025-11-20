@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Завдання 1</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+        }
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .result-line {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.1em;
+        }
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Результат розбору рядка "dwbyu@mail.ua"</h2>
+        <script>
+            let s = "dwbyu@mail.ua";
+            let r = /^([a-z0-9]+)(\.[a-z0-9]+)*@([a-z0-9]+)(\.[a-z0-9]+)*$/i;
+            let a = s.match(r);
+            
+            if (a) {
+                for (let i = 0; i < a.length; i++) {
+                    document.write('<div class="result-line"><strong>a[' + i + ']:</strong> ' + (a[i] ? a[i] : "undefined") + '</div>');
+                }
+            } else {
+                document.write('<div class="result-line">Збігів не знайдено</div>');
+            }
+        </script>
+        <a href="index.html" class="back-btn">← Назад</a>
+    </div>
+</body>
+</html>
